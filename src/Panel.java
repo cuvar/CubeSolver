@@ -26,13 +26,46 @@ public class Panel extends JPanel {
         g.drawRect(barrierWidth + margin, margin, previewWidth, previewWidth);
 
 
-
-        //draw block
-        g.setColor(Frame.block.color);
-        g.fillRect(Frame.block.x, Frame.block.y, Frame.block.width, Frame.block.width);
-
-
-
+        for(Figure f : Frame.figures){
+            //draw figure
+            switch (f.blockType) {
+                case 0:     //O
+                    g.setColor(f.color);
+                    g.fillRect(f.x, f.y, f.width, f.height);
+                    break;
+                case 1:     //T
+                    g.setColor(f.color);
+                    g.fillRect(f.x, f.y, f.width, margin);
+                    g.fillRect(f.x + margin, f.y + margin, margin, margin);
+                    break;
+                case 2:     //I
+                    g.setColor(f.color);
+                    g.fillRect(f.x, f.y, f.width, f.height);
+                    break;
+                case 3:     //J
+                    g.setColor(f.color);
+                    g.fillRect(f.x + margin, f.y, margin, f.height);
+                    g.fillRect(f.x, f.y + 2*margin, margin, margin);
+                    break;
+                case 4:     //L
+                    g.setColor(f.color);
+                    g.fillRect(f.x, f.y, margin, f.height);
+                    g.fillRect(f.x + margin, f.y + 2*margin, margin, margin);
+                    break;
+                case 5:     //S
+                    g.setColor(f.color);
+                    g.fillRect(f.x + margin, f.y, f.width, margin);
+                    g.fillRect(f.x, f.y + margin, f.width, margin);
+                    break;
+                case 6:     //Z
+                    g.setColor(f.color);
+                    g.fillRect(f.x, f.y, f.width, margin);
+                    g.fillRect(f.x + margin, f.y + margin, f.width, margin);
+                    break;
+                default:
+                    break;
+            }
+        }
 
         Toolkit.getDefaultToolkit().sync();
     }

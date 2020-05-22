@@ -1,10 +1,11 @@
+import javax.imageio.ImageReader;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.security.Key;
+import java.util.ArrayList;
 
 public class Frame extends JFrame implements ActionListener, KeyListener {
 
@@ -13,7 +14,9 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
 
     private Panel panel;
     private Timer timer;
-    public static Block block;
+    public static Figure figure;
+
+    public static ArrayList<Figure> figures;
 
     public Frame(){
         //general setup
@@ -33,8 +36,12 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         panel = new Panel();
         add(panel);
 
-        //init block
-        block = new Block(20,20, Color.red);
+        //init figure
+        figure = new Figure(1);
+
+        //init list
+        figures = new ArrayList<>();
+        figures.add(figure);
     }
 
 
@@ -43,16 +50,16 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
     //
     @Override
     public void actionPerformed(ActionEvent e) {
-        //block gravity
-        if (block.y < Panel.barrierHeight){
-            if(!block.softDrop || !block.hardDrop){
-                block.gravity();
+        //figure gravity
+        if (figure.isFalling()){
+            if(!figure.softDrop || !figure.hardDrop){
+                figure.gravity();
                 repaint();
             }
         }
 
-        if(block.y == Panel.barrierHeight) { //überarbeiten wenn figures
-            block.landed = true;
+        if(figure.hasLanded()) { //überarbeiten wenn figures
+            figure.landed = true;
         }
     }
 
@@ -68,40 +75,40 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
             System.exit(0);
         }
 
-        //block to left
+        //figure to left
         if(key == KeyEvent.VK_A) {
-            if(block.x > Panel.margin && !block.landed) {
-                block.x -= block.width;
+            if(figure.x > Panel.margin && !figure.landed) {
+                figure.x -= figure.width;
             }
-            System.out.println(block.x + " - " + block.y + " - " + block.width);
+            System.out.println(figure.x + " - " + figure.y + " - " + figure.width);
         }
 
-        //block to right
+        //figure to right
         if(key == KeyEvent.VK_D) {
-            if(block.x < Panel.barrierWidth && !block.landed) {
-                block.x += block.width;
+            if(figure.x < Panel.barrierWidth && !figure.landed) {
+                figure.x += figure.width;
             }
-            System.out.println(block.x + " - " + block.y + " - " + block.width);
+            System.out.println(figure.x + " - " + figure.y + " - " + figure.width);
         }
 
         //softdrop
         if(key == KeyEvent.VK_S) {
-            if(block.y < Panel.barrierHeight - Panel.margin) {      //überarbeiten wenn figures
-                if (!block.softDrop || !block.hardDrop) {
-                    block.softDrop();
+            if(figure.isFalling()) {      //überarbeiten wenn figures
+                if (!figure.softDrop || !figure.hardDrop) {
+                    figure.softDrop();
                     repaint();
 
                 }
             } else {
-                block.landed = true;
+                figure.landed = true;
             }
         }
 
         //harddrop
         if(key == KeyEvent.VK_SPACE) {
-            if(block.y < Panel.barrierHeight) {                 //überarbeiten wenn figures
-                if (!block.softDrop || !block.hardDrop) {
-                    block.hardDrop();
+            if(figure.isFalling()) {                 //überarbeiten wenn figures
+                if (!figure.softDrop || !figure.hardDrop) {
+                    figure.hardDrop();
                     repaint();
                 }
             }
