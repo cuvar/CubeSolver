@@ -97,6 +97,11 @@ public class Figure {
         hardDrop = false;
     }
 
+    void rotate(){
+        //rotates blocks 90° to the right
+
+    }
+
 
     boolean hasLanded(){
         if(this.y + this.height == Panel.barrierHeight + Panel.margin) {

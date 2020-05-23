@@ -75,6 +75,13 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
             System.exit(0);
         }
 
+        //rotates figure
+        if(key == KeyEvent.VK_W) {
+            if(!figure.landed) {
+                figure.rotate();
+            }
+        }
+
         //figure to left
         if(key == KeyEvent.VK_A) {
             if(figure.x > Panel.margin && !figure.landed) {
