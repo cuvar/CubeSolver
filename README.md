@@ -1,2 +1,2 @@
 # Tetris
-A java game
+A Tetris game played by an neural network
