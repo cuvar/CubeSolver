@@ -24,69 +24,84 @@ public class Tetromino {
         this.x = 160;
         this.y = 20;
 
-        int k = 0;
         switch (blockType) {
             case 0:     //O
                 width = 2*Frame.MARGIN;
                 height = 2*Frame.MARGIN;
                 color = Color.yellow;
 
-                for(int i = 1; i <= BLOCK_NUM/2; i++) {
-                    for(int j = 1; j <= BLOCK_NUM/2; j++) {
-                        if(i == 2 && (j == BLOCK_NUM/2)){
-                            blocks[k] = new Block(i*x, j*y, color, true);
-                        } else  {
-                            blocks[k] = new Block(i*x, j*y, color);
-                        }
-                        k++;
-                    }
-                }
-                k = 0;
+                blocks[0] = new Block(1*x, 1*y, color);
+                blocks[1] = new Block(2*x, 1*y, color);
+                blocks[2] = new Block(1*x, 2*y, color);
+                blocks[3] = new Block(2*x, 2*y, color, true);
                 break;
-
 
             case 1:     //T
                 width = 3*Frame.MARGIN;
                 height = 2*Frame.MARGIN;
                 color = Color.red;
 
+                blocks[0] = new Block(1*x, 1*y, color);
+                blocks[1] = new Block(2*x, 1*y, color, true);
+                blocks[2] = new Block(3*x, 1*y, color);
+                blocks[3] = new Block(2*x, 2*y, color);
                 break;
-
 
             case 2:     //I
                 width = 1*Frame.MARGIN;
                 height = 4*Frame.MARGIN;
                 color = Color.blue;
 
-                for(int i = 0; i < BLOCK_NUM; i++) {
-                    if(i == 2){
-                        blocks[k] = new Block(x, i*y, color, true);
-                    } else  {
-                        blocks[k] = new Block(x, i*y, color);
-                    }
-                }
-                k = 0;
+                blocks[0] = new Block(x, 1*y, color);
+                blocks[1] = new Block(x, 2*y, color);
+                blocks[2] = new Block(x, 3*y, color, true);
+                blocks[3] = new Block(x, 4*y, color);
                 break;
+
             case 3:     //J
                 width = 2*Frame.MARGIN;
                 height = 3*Frame.MARGIN;
                 color = Color.green;
+
+                blocks[0] = new Block(2*x, 1*y, color);
+                blocks[1] = new Block(2*x, 2*y, color);
+                blocks[2] = new Block(2*x, 3*y, color, true);
+                blocks[3] = new Block(1*x, 3*y, color);
                 break;
+
             case 4:     //L
                 width = 2*Frame.MARGIN;
                 height = 3*Frame.MARGIN;
                 color = Color.white;
+
+                blocks[0] = new Block(1*x, 1*y, color);
+                blocks[1] = new Block(1*x, 2*y, color);
+                blocks[2] = new Block(1*x, 3*y, color, true);
+                blocks[3] = new Block(2*x, 3*y, color);
                 break;
+
             case 5:     //S
                 width = 2*Frame.MARGIN;
                 height = 2*Frame.MARGIN;
                 color = Color.magenta;
+
+                blocks[0] = new Block(2*x, 1*y, color);
+                blocks[1] = new Block(3*x, 1*y, color);
+                blocks[3] = new Block(2*x, 2*y, color);
+                blocks[2] = new Block(1*x, 2*y, color, true);
                 break;
+
             case 6:     //Z
                 width = 2*Frame.MARGIN;
                 height = 2*Frame.MARGIN;
                 color = Color.cyan;
+
+                blocks[0] = new Block(1*x, 1*y, color);
+                blocks[1] = new Block(2*x, 2*y, color);
+                blocks[2] = new Block(2*x, 3*y, color, true);
+                blocks[3] = new Block(3*x, 3*y, color);
                 break;
+
             default:
                 width = 0;
                 height = 0;

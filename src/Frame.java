@@ -51,7 +51,7 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         add(panel);
 
         //init figure
-        figure = new Figure(2);
+        figure = new Figure(0);
 
         //init list
         figures = new ArrayList<>();
