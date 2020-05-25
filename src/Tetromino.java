@@ -1,8 +1,10 @@
 import java.awt.*;
+import java.lang.reflect.Array;
 
-public class Figure {
+public class Tetromino {
 
-    private final int blockNum;
+
+    private final int BLOCK_NUM = 4;
     final int blockType;
     final Color color;
     final int width;
@@ -13,30 +15,57 @@ public class Figure {
     boolean softDrop = false;
     boolean hardDrop = false;
     boolean landed = false;
+    private Block[] blocks = new Block[BLOCK_NUM];
 
 
-    public Figure(int blockType) {
+    public Tetromino(int blockType) {
 
         this.blockType = blockType;
-        this.blockNum = 4;
         this.x = 160;
         this.y = 20;
 
+        int k = 0;
         switch (blockType) {
             case 0:     //O
                 width = 2*Frame.MARGIN;
                 height = 2*Frame.MARGIN;
                 color = Color.yellow;
+
+                for(int i = 1; i <= BLOCK_NUM/2; i++) {
+                    for(int j = 1; j <= BLOCK_NUM/2; j++) {
+                        if(i == 2 && (j == BLOCK_NUM/2)){
+                            blocks[k] = new Block(i*x, j*y, color, true);
+                        } else  {
+                            blocks[k] = new Block(i*x, j*y, color);
+                        }
+                        k++;
+                    }
+                }
+                k = 0;
                 break;
+
+
             case 1:     //T
                 width = 3*Frame.MARGIN;
                 height = 2*Frame.MARGIN;
                 color = Color.red;
+
                 break;
+
+
             case 2:     //I
                 width = 1*Frame.MARGIN;
                 height = 4*Frame.MARGIN;
                 color = Color.blue;
+
+                for(int i = 0; i < BLOCK_NUM; i++) {
+                    if(i == 2){
+                        blocks[k] = new Block(x, i*y, color, true);
+                    } else  {
+                        blocks[k] = new Block(x, i*y, color);
+                    }
+                }
+                k = 0;
                 break;
             case 3:     //J
                 width = 2*Frame.MARGIN;
@@ -63,64 +92,6 @@ public class Figure {
                 height = 0;
                 color = Color.pink;
                 break;
-        }
-
-    }
-
-
-    void gravity() {
-        this.y += 5;
-    }
-
-    void softDrop(int ground) {
-        softDrop = true;
-        hardDrop = false;
-
-        int dif = (ground + Frame.MARGIN) - (this.y + this.height);
-        if(dif >= 20) {
-            this.y += 20;
-        } else {
-            this.y+= dif;
-        }
-        softDrop = false;
-        hardDrop = true;
-    }
-
-    void hardDrop(int ground) {
-        softDrop = false;
-        hardDrop = true;
-
-        this.y = ground - this.height;
-        this.landed = true;
-
-        softDrop = true;
-        hardDrop = false;
-    }
-
-    //rotates blocks 90° to the right
-    void rotate(){
-
-
-
-    }
-
-    int getBlockType() {
-        return this.blockType;
-    }
-
-    boolean hasLanded(int ground){
-        if(this.y + this.height == ground + Frame.MARGIN) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    boolean isFalling(int ground){
-        if(this.y + this.height < ground + Frame.MARGIN){
-            return true;
-        } else {
-            return false;
         }
     }
 }

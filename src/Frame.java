@@ -11,12 +11,18 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
 
     private static final int WIDTH = 600;
     private static final int HEIGHT = 600;
+    public static final int MARGIN = 20;
+    public static final Color COLOR_BG = new Color(60,60,64);
 
-    private Panel panel;
     private Timer timer;
-    public static Figure figure;
+    private JPanel panel;
+    private Board boardPanel;
+    private Preview previewPanel;
 
+    public static Figure figure;
     public static ArrayList<Figure> figures;
+
+
 
     public Frame(){
         //general setup
@@ -32,12 +38,20 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         timer = new Timer(50, this);
         timer.start();
 
+        boardPanel = new Board(MARGIN, MARGIN, 16*MARGIN + 1, 26*MARGIN + 1);
+        previewPanel = new Preview(boardPanel.getWidth() + MARGIN, MARGIN, 6*MARGIN + 1, 6*MARGIN + 1);
+
+
         //Panel
-        panel = new Panel();
+        panel = new JPanel();
+        panel.setLayout(null);
+        panel.setBackground(COLOR_BG);
+        panel.add(boardPanel);
+        panel.add(previewPanel);
         add(panel);
 
         //init figure
-        figure = new Figure(1);
+        figure = new Figure(2);
 
         //init list
         figures = new ArrayList<>();
@@ -50,17 +64,21 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
     //
     @Override
     public void actionPerformed(ActionEvent e) {
-        //figure gravity
-        if (figure.isFalling()){
+
+        repaint();
+
+
+        /*//figure gravity
+        if (figure.isFalling(boardPanel.getHeight() - boardPanel.getY())){
             if(!figure.softDrop || !figure.hardDrop){
                 figure.gravity();
                 repaint();
             }
         }
 
-        if(figure.hasLanded()) { //überarbeiten wenn figures
+        if(figure.hasLanded(boardPanel.getHeight() - boardPanel.getY())) { //überarbeiten wenn figures
             figure.landed = true;
-        }
+        }*/
     }
 
 
@@ -69,13 +87,13 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
     //
     @Override
     public void keyPressed(KeyEvent e) {
-        int key = e.getKeyCode();
+       int key = e.getKeyCode();
         //exit game
         if(key == KeyEvent.VK_ESCAPE) {
             System.exit(0);
         }
 
-        //rotates figure
+        /*//rotates figure
         if(key == KeyEvent.VK_W) {
             if(!figure.landed) {
                 figure.rotate();
@@ -84,7 +102,7 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
 
         //figure to left
         if(key == KeyEvent.VK_A) {
-            if(figure.x > Panel.margin && !figure.landed) {
+            if(figure.x > MARGIN && !figure.landed) {
                 figure.x -= figure.width;
             }
             System.out.println(figure.x + " - " + figure.y + " - " + figure.width);
@@ -92,7 +110,7 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
 
         //figure to right
         if(key == KeyEvent.VK_D) {
-            if(figure.x < Panel.barrierWidth && !figure.landed) {
+            if(figure.x < boardPanel.getWidth() && !figure.landed) {
                 figure.x += figure.width;
             }
             System.out.println(figure.x + " - " + figure.y + " - " + figure.width);
@@ -100,9 +118,9 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
 
         //softdrop
         if(key == KeyEvent.VK_S) {
-            if(figure.isFalling()) {      //überarbeiten wenn figures
+            if(figure.isFalling(boardPanel.getHeight() - boardPanel.getY())) {      //überarbeiten wenn figures
                 if (!figure.softDrop || !figure.hardDrop) {
-                    figure.softDrop();
+                    figure.softDrop(boardPanel.getHeight() - boardPanel.getY());
                     repaint();
 
                 }
@@ -113,13 +131,13 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
 
         //harddrop
         if(key == KeyEvent.VK_SPACE) {
-            if(figure.isFalling()) {                 //überarbeiten wenn figures
+            if(figure.isFalling(boardPanel.getHeight() - boardPanel.getY())) {                 //überarbeiten wenn figures
                 if (!figure.softDrop || !figure.hardDrop) {
-                    figure.hardDrop();
+                    figure.hardDrop(boardPanel.getHeight() - boardPanel.getY());
                     repaint();
                 }
             }
-        }
+        }*/
     }
 
     @Override

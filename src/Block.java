@@ -6,18 +6,39 @@ public class Block {
     int x;
     int y;
     final Color color;
-    boolean softDrop = false;
-    boolean hardDrop = false;
-    boolean landed = false;
+    boolean center;
+   /*boolean softDrop;
+    boolean hardDrop;
+    boolean landed;*/
 
+    //for non-centered blocks
     public Block(int x, int y, Color color){
-        this.width = Panel.margin;
+        this.width = Frame.MARGIN;
         this.color = color;
         this.x = x;
         this.y = y;
+        this.center = false;
+        /*this.softDrop = false;
+        this.hardDrop = false;
+        this.landed = false;*/
 
     }
 
+    //for centered blocks
+    public Block(int x, int y, Color color, boolean centered){
+        this.width = Frame.MARGIN;
+        this.color = color;
+        this.x = x;
+        this.y = y;
+        this.center = centered;
+        /*this.softDrop = false;
+        this.hardDrop = false;
+        this.landed = false;*/
+
+    }
+
+
+/*
     void gravity() {
         this.y += 5;
     }
@@ -32,15 +53,17 @@ public class Block {
         hardDrop = true;
     }
 
-    void hardDrop() {
+    void hardDrop(int ground) {
         softDrop = false;
         hardDrop = true;
 
-        this.y = Panel.barrierHeight;
+        this.y = ground;
         this.landed = true;
 
         softDrop = true;
         hardDrop = false;
     }
+
+*/
 
 }
