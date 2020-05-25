@@ -65,10 +65,9 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-        repaint();
 
 
-        /*//figure gravity
+        //figure gravity
         if (figure.isFalling(boardPanel.getHeight() - boardPanel.getY())){
             if(!figure.softDrop || !figure.hardDrop){
                 figure.gravity();
@@ -78,7 +77,7 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
 
         if(figure.hasLanded(boardPanel.getHeight() - boardPanel.getY())) { //überarbeiten wenn figures
             figure.landed = true;
-        }*/
+        }
     }
 
 
@@ -115,12 +114,12 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
             }
             System.out.println(figure.x + " - " + figure.y + " - " + figure.width);
         }
-
+*/
         //softdrop
         if(key == KeyEvent.VK_S) {
-            if(figure.isFalling(boardPanel.getHeight() - boardPanel.getY())) {      //überarbeiten wenn figures
+            if(figure.isFalling(boardPanel.getHeight())) {      //überarbeiten wenn figures
                 if (!figure.softDrop || !figure.hardDrop) {
-                    figure.softDrop(boardPanel.getHeight() - boardPanel.getY());
+                    figure.softDrop(boardPanel.getHeight());
                     repaint();
 
                 }
@@ -131,13 +130,13 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
 
         //harddrop
         if(key == KeyEvent.VK_SPACE) {
-            if(figure.isFalling(boardPanel.getHeight() - boardPanel.getY())) {                 //überarbeiten wenn figures
+            if(figure.isFalling(boardPanel.getHeight())) {                 //überarbeiten wenn figures
                 if (!figure.softDrop || !figure.hardDrop) {
-                    figure.hardDrop(boardPanel.getHeight() - boardPanel.getY());
+                    figure.hardDrop(boardPanel.getHeight());
                     repaint();
                 }
             }
-        }*/
+        }
     }
 
     @Override

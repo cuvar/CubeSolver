@@ -4,9 +4,9 @@ public class Figure {
 
     private final int BLOCK_NUM = 4;
     final int blockType;
-    final Color color;
     final int width;
     final int height;
+    final Color color;
 
     int x;
     int y;
@@ -40,9 +40,9 @@ public class Figure {
                 color = Color.red;
 
                 blocks[0] = new Block(x, y, color);
-                blocks[1] = new Block(x + Frame.MARGIN, y, color, true);
+                blocks[1] = new Block(x + Frame.MARGIN, y, color);
                 blocks[2] = new Block(x + 2*Frame.MARGIN, y, color);
-                blocks[3] = new Block(x + Frame.MARGIN, y + Frame.MARGIN, color);
+                blocks[3] = new Block(x + Frame.MARGIN, y + Frame.MARGIN, color, true);
                 break;
 
             case 2:     //I
@@ -52,8 +52,8 @@ public class Figure {
 
                 blocks[0] = new Block(x, y, color);
                 blocks[1] = new Block(x, y + Frame.MARGIN, color);
-                blocks[2] = new Block(x, y + 2*Frame.MARGIN, color, true);
-                blocks[3] = new Block(x, y + 3*Frame.MARGIN, color);
+                blocks[2] = new Block(x, y + 2*Frame.MARGIN, color);
+                blocks[3] = new Block(x, y + 3*Frame.MARGIN, color, true);
                 break;
 
             case 3:     //J
@@ -63,8 +63,8 @@ public class Figure {
 
                 blocks[0] = new Block(x + Frame.MARGIN, y, color);
                 blocks[1] = new Block(x + Frame.MARGIN, y + Frame.MARGIN, color);
-                blocks[2] = new Block(x + Frame.MARGIN, y + 2*Frame.MARGIN, color, true);
-                blocks[3] = new Block(x, y + 2*Frame.MARGIN, color);
+                blocks[2] = new Block(x + Frame.MARGIN, y + 2*Frame.MARGIN, color);
+                blocks[3] = new Block(x, y + 2*Frame.MARGIN, color, true);
                 break;
 
             case 4:     //L
@@ -74,8 +74,8 @@ public class Figure {
 
                 blocks[0] = new Block(x, y, color);
                 blocks[1] = new Block(x, y + Frame.MARGIN, color);
-                blocks[2] = new Block(x, y + 2*Frame.MARGIN, color, true);
-                blocks[3] = new Block(x + Frame.MARGIN, y + 2*Frame.MARGIN, color);
+                blocks[2] = new Block(x, y + 2*Frame.MARGIN, color);
+                blocks[3] = new Block(x + Frame.MARGIN, y + 2*Frame.MARGIN, color, true);
                 break;
 
             case 5:     //S
@@ -96,8 +96,8 @@ public class Figure {
 
                 blocks[0] = new Block(x, y, color);
                 blocks[1] = new Block(x + Frame.MARGIN, y + Frame.MARGIN, color);
-                blocks[2] = new Block(x + Frame.MARGIN, y + 2*Frame.MARGIN, color, true);
-                blocks[3] = new Block(x + 2*Frame.MARGIN, y + 2*Frame.MARGIN, color);
+                blocks[2] = new Block(x + Frame.MARGIN, y + 2*Frame.MARGIN, color);
+                blocks[3] = new Block(x + 2*Frame.MARGIN, y + 2*Frame.MARGIN, color, true);
                 break;
 
             default:
@@ -109,31 +109,64 @@ public class Figure {
     }
 
 
-    void gravity() {
-        this.y += 5;
+    Block getCenteredBlock(){
+        int k = 0;
+        for (int i = 0; i < BLOCK_NUM; i++){
+            if(blocks[i].center){
+                k = i;
+            }
+        }
+        return blocks[k];
     }
 
+
+    int getBlockType() {
+        return this.blockType;
+    }
+
+    //figure's fall speed
+    void gravity() {
+        //this.y += 5;
+        for (Block b : blocks){
+            b.y+=5;
+        }
+    }
+
+    //pressing s lets the figure drop faster
     void softDrop(int ground) {
         softDrop = true;
         hardDrop = false;
 
-        int dif = (ground + Frame.MARGIN) - (this.y + this.height);
+        int dif = (ground + Frame.MARGIN) - (getCenteredBlock().y + getCenteredBlock().width);
         if(dif >= 20) {
-            this.y += 20;
+            //change each y coord of blocks
+            for(Block b : blocks) {
+                b.y += 20;
+            }
         } else {
-            this.y+= dif;
+            //change each y coord of blocks
+            for(Block b : blocks) {
+                b.y += dif;
+            }
         }
         softDrop = false;
         hardDrop = true;
     }
 
+    //presing space immediately drops the figure
     void hardDrop(int ground) {
         softDrop = false;
         hardDrop = true;
 
-        this.y = ground - this.height;
-        this.landed = true;
+        //change each y coord of blocks
+        for(Block bb : blocks) {
+            int dif = ground - (bb.width + bb.y);
+            bb.y += dif;
+            System.out.println(bb.y + "" + dif);
+            dif = 0;
+        }
 
+        this.landed = true;
         softDrop = true;
         hardDrop = false;
     }
@@ -145,20 +178,18 @@ public class Figure {
 
     }
 
-    int getBlockType() {
-        return this.blockType;
-    }
-
+    //check if figure is on ground
     boolean hasLanded(int ground){
-        if(this.y + this.height == ground + Frame.MARGIN) {
+        if(getCenteredBlock().y + getCenteredBlock().width == ground) {
             return true;
         } else {
             return false;
         }
     }
 
+    //check if figure is still falling
     boolean isFalling(int ground){
-        if(this.y + this.height < ground + Frame.MARGIN){
+        if(getCenteredBlock().y + getCenteredBlock().width < ground){
             return true;
         } else {
             return false;
