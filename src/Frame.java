@@ -92,7 +92,7 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
             System.exit(0);
         }
 
-        /*//rotates figure
+        //rotates figure
         if(key == KeyEvent.VK_W) {
             if(!figure.landed) {
                 figure.rotate();
@@ -101,20 +101,16 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
 
         //figure to left
         if(key == KeyEvent.VK_A) {
-            if(figure.x > MARGIN && !figure.landed) {
-                figure.x -= figure.width;
-            }
+            figure.moveLeft();
             System.out.println(figure.x + " - " + figure.y + " - " + figure.width);
         }
 
         //figure to right
         if(key == KeyEvent.VK_D) {
-            if(figure.x < boardPanel.getWidth() && !figure.landed) {
-                figure.x += figure.width;
-            }
+            figure.moveRight(boardPanel.getWidth());
             System.out.println(figure.x + " - " + figure.y + " - " + figure.width);
         }
-*/
+
         //softdrop
         if(key == KeyEvent.VK_S) {
             if(figure.isFalling(boardPanel.getHeight())) {      //überarbeiten wenn figures

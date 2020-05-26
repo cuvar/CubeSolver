@@ -171,6 +171,36 @@ public class Figure {
         hardDrop = false;
     }
 
+    //pressing A moves figure left
+    void moveLeft(){
+        if(!landed){ //figure hasn't landed already
+            for(Block b : blocks){
+                if(x > 0) { //figure is in board
+                    if(x > b.width) {   //dif is large enough
+                        b.x -= b.width;
+                    } else {
+                        b.x-= b.x;
+                    }
+                }
+            }
+        }
+    }
+
+    //pressing D moves figure right
+    void moveRight(int rightBorder){
+        if(!landed){ //figure hasn't landed already
+            for(Block b : blocks){
+                if(x < rightBorder) { //figure is in board
+                    if(x > rightBorder - b.x) {   //dif is large enough
+                        b.x += b.width;
+                    } else {    //dif isn't large enough
+                        b.x+= rightBorder - b.x;
+                    }
+                }
+            }
+        }
+    }
+
     //rotates blocks 90° to the right
     void rotate(){
 
