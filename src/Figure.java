@@ -4,8 +4,8 @@ public class Figure {
 
     private final int BLOCK_NUM = 4;
     final int blockType;
-    final int width;
-    final int height;
+    int width;
+    int height;
     final Color color;
 
     int x;
@@ -30,8 +30,8 @@ public class Figure {
 
                 blocks[0] = new Block(x, y, color);
                 blocks[1] = new Block(x + Frame.MARGIN, y, color);
-                blocks[2] = new Block(x, y + Frame.MARGIN, Color.red);
-                blocks[3] = new Block(x + Frame.MARGIN, y + Frame.MARGIN, color, true);
+                blocks[2] = new Block(x, y + Frame.MARGIN, color);
+                blocks[3] = new Block(x + Frame.MARGIN, y + Frame.MARGIN, Color.red, true);
                 break;
 
             case 1:     //T
@@ -175,13 +175,13 @@ public class Figure {
     //pressing A moves figure left
     void moveLeft(){
         if(!landed){ //figure hasn't landed already
-            for(Block b : blocks){
-                if(b.x > 0) { //figure is in board
-                    if(b.x >= b.width) {   //dif is large enough
-                        System.out.println("TRUE");
+            int figureStart = getCenteredBlock().x + getCenteredBlock().width - width;
+            if(figureStart > 0) { //figure is in board
+                for(Block b : blocks){
+                    if(figureStart >= b.width) {   //dif is large enough
                         b.x -= b.width;
                     } else {
-                        b.x -= b.x;
+                        b.x -= figureStart;
                     }
                 }
             }
@@ -191,12 +191,13 @@ public class Figure {
     //pressing D moves figure right
     void moveRight(int rightBorder){
         if(!landed){ //figure hasn't landed already
-            for(Block b : blocks){
-                if(b.x + b.width <= rightBorder) { //figure is in board
-                    if(b.width >= rightBorder - b.x) {   //dif is large enough
+            if(getCenteredBlock().x + getCenteredBlock().width <= rightBorder) { //figure is in board
+                int dif = rightBorder - (getCenteredBlock().x + getCenteredBlock().width);  //dif btw figure and border
+                for(Block b : blocks){
+                    if(b.width <= dif) {   //dif is large enough
                         b.x += b.width;
                     } else {    //dif isn't large enough
-                        b.x += rightBorder - b.x - b.width;
+                        b.x += dif;
                     }
                 }
             }
@@ -205,6 +206,10 @@ public class Figure {
 
     //rotates blocks 90° to the right
     void rotate(){
+        //switch figure's w and h
+        int h = height;
+        height = width;
+        width = height;
 
 
 

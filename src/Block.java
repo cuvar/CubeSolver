@@ -8,7 +8,7 @@ public class Block {
     final Color color;
     boolean center;
 
-    //for non-centered blocks
+    //constructor
     public Block(int x, int y, Color color){
         this.width = Frame.MARGIN;
         this.color = color;
@@ -18,7 +18,7 @@ public class Block {
 
     }
 
-    //for centered blocks
+    //constructor
     public Block(int x, int y, Color color, boolean centered){
         this.width = Frame.MARGIN;
         this.color = color;

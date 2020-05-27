@@ -101,13 +101,11 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         //figure to left
         if(key == KeyEvent.VK_A) {
             figure.moveLeft();
-            System.out.println(figure.x + " - " + figure.y + " - " + figure.width);
         }
 
         //figure to right
         if(key == KeyEvent.VK_D) {
             figure.moveRight(boardPanel.getWidth());
-            System.out.println(figure.x + " - " + figure.y + " - " + figure.width);
         }
 
         //softdrop
