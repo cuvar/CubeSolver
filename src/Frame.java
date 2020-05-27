@@ -66,16 +66,15 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
     public void actionPerformed(ActionEvent e) {
 
 
-
         //figure gravity
-        if (figure.isFalling(boardPanel.getHeight() - boardPanel.getY())){
+        if (figure.isFalling(boardPanel.getHeight())){
             if(!figure.softDrop || !figure.hardDrop){
-                figure.gravity();
+                figure.gravity(boardPanel.getHeight());
                 repaint();
             }
         }
 
-        if(figure.hasLanded(boardPanel.getHeight() - boardPanel.getY())) { //überarbeiten wenn figures
+        if(figure.hasLanded(boardPanel.getHeight())) { //überarbeiten wenn figures
             figure.landed = true;
         }
     }

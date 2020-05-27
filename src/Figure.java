@@ -30,7 +30,7 @@ public class Figure {
 
                 blocks[0] = new Block(x, y, color);
                 blocks[1] = new Block(x + Frame.MARGIN, y, color);
-                blocks[2] = new Block(x, y + Frame.MARGIN, color);
+                blocks[2] = new Block(x, y + Frame.MARGIN, Color.red);
                 blocks[3] = new Block(x + Frame.MARGIN, y + Frame.MARGIN, color, true);
                 break;
 
@@ -125,10 +125,13 @@ public class Figure {
     }
 
     //figure's fall speed
-    void gravity() {
-        //this.y += 5;
+    void gravity(int ground) {
         for (Block b : blocks){
-            b.y+=5;
+            if(getCenteredBlock().y + b.width + 5 <= ground){
+                b.y+=5;
+            } else {
+                b.y += ground - getCenteredBlock().y - b.width;
+            }
         }
     }
 
@@ -137,7 +140,7 @@ public class Figure {
         softDrop = true;
         hardDrop = false;
 
-        int dif = (ground + Frame.MARGIN) - (getCenteredBlock().y + getCenteredBlock().width);
+        int dif = ground - (getCenteredBlock().y + getCenteredBlock().width);
         if(dif >= 20) {
             //change each y coord of blocks
             for(Block b : blocks) {
@@ -159,11 +162,9 @@ public class Figure {
         hardDrop = true;
 
         //change each y coord of blocks
-        for(Block bb : blocks) {
-            int dif = ground - (bb.width + bb.y);
-            bb.y += dif;
-            System.out.println(bb.y + "" + dif);
-            dif = 0;
+        int dif = ground - (getCenteredBlock().width + getCenteredBlock().y);
+        for(Block b : blocks) {
+            b.y += dif;
         }
 
         this.landed = true;
@@ -175,11 +176,12 @@ public class Figure {
     void moveLeft(){
         if(!landed){ //figure hasn't landed already
             for(Block b : blocks){
-                if(x > 0) { //figure is in board
-                    if(x > b.width) {   //dif is large enough
+                if(b.x > 0) { //figure is in board
+                    if(b.x >= b.width) {   //dif is large enough
+                        System.out.println("TRUE");
                         b.x -= b.width;
                     } else {
-                        b.x-= b.x;
+                        b.x -= b.x;
                     }
                 }
             }
@@ -190,11 +192,11 @@ public class Figure {
     void moveRight(int rightBorder){
         if(!landed){ //figure hasn't landed already
             for(Block b : blocks){
-                if(x < rightBorder) { //figure is in board
-                    if(x > rightBorder - b.x) {   //dif is large enough
+                if(b.x + b.width <= rightBorder) { //figure is in board
+                    if(b.width >= rightBorder - b.x) {   //dif is large enough
                         b.x += b.width;
                     } else {    //dif isn't large enough
-                        b.x+= rightBorder - b.x;
+                        b.x += rightBorder - b.x - b.width;
                     }
                 }
             }

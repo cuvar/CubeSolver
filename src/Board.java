@@ -40,8 +40,8 @@ public class Board extends JPanel {
 
         for(Figure f : Frame.figures){
             //draw figure
-            g.setColor(f.color);
             for (Block b : f.blocks) {
+                g.setColor(b.color);
                 g.fillRect(b.x, b.y, b.width, b.width);
             }
         }
