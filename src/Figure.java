@@ -264,6 +264,52 @@ public class Figure {
         height = width;
         width = height;
 
+        Block c = getCenteredBlock();
+
+        for(Block b : blocks) {
+            if(c.x == b.x){
+                if(c.y == b.y){
+                    //center
+                }
+
+                else if(c.y > b.y){
+                    //nach oben links
+                }
+
+                else if(c.y < b.y){
+                    //nach unten rechts
+                }
+            }
+
+            else if (c.x > b.x) {
+                if(c.y == b.y){
+                    //nach oben rechts
+                }
+
+                else if(c.y > b.y){
+                    //nach rechts
+                }
+
+                else if(c.y < b.y){
+                    //nach oben
+                }
+            }
+
+            else if(c.x < b.x) {
+                if(c.y == b.y){
+                    //nach unten links
+                }
+
+                else if(c.y > b.y){
+                    //nach unten
+                }
+
+                else if(c.y < b.y){
+                    //nach links
+                }
+            }
+        }
+
 
 
     }
