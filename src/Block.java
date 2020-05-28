@@ -8,7 +8,7 @@ public class Block {
     final Color color;
     boolean center;
 
-    //constructor
+    //constructor for normal blocks
     public Block(int x, int y, Color color){
         this.width = Frame.MARGIN;
         this.color = color;
@@ -18,7 +18,7 @@ public class Block {
 
     }
 
-    //constructor
+    //constructor for centered blocks
     public Block(int x, int y, Color color, boolean centered){
         this.width = Frame.MARGIN;
         this.color = color;
@@ -26,5 +26,11 @@ public class Block {
         this.y = y;
         this.center = centered;
 
+    }
+
+    //sets block's position
+    void setPos(int newX, int newY) {
+        this.x = newX;
+        this.y = newY;
     }
 }
