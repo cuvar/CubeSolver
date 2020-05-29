@@ -95,9 +95,9 @@ public class Figure {
                 color = Color.cyan;
 
                 blocks[0] = new Block(x, y, color);
-                blocks[1] = new Block(x + Frame.MARGIN, y, color);
-                blocks[2] = new Block(x + Frame.MARGIN, y + Frame.MARGIN, color);
-                blocks[3] = new Block(x + 2*Frame.MARGIN, y + Frame.MARGIN, color, true);
+                blocks[1] = new Block(x + Frame.MARGIN, y, Color.green);
+                blocks[2] = new Block(x + Frame.MARGIN, y + Frame.MARGIN, Color.red, true);
+                blocks[3] = new Block(x + 2*Frame.MARGIN, y + Frame.MARGIN, Color.yellow);
                 break;
 
             default:
@@ -267,6 +267,23 @@ public class Figure {
         Block c = getCenteredBlock();
 
         for(Block b : blocks) {
+
+            int delta = 0;
+            int dx = Math.abs(b.x-c.x);
+            int dy = Math.abs(b.y-c.y);
+
+           if (dx==dy) {
+                delta = dx;
+                System.out.println(dx);
+            } else if (dx > dy) {
+                delta = dx;
+            } else {
+                delta = dy;
+            }
+
+
+
+
             if(c.x == b.x){
                 if(c.y == b.y){
                     //center
@@ -274,38 +291,50 @@ public class Figure {
 
                 else if(c.y > b.y){
                     //nach oben links
+                    b.x += 1 * delta;
+                    b.y += 1 * delta;
                 }
 
                 else if(c.y < b.y){
                     //nach unten rechts
+                    b.x -= 1 * delta;
+                    b.y -= 1 * delta;
                 }
             }
 
             else if (c.x > b.x) {
                 if(c.y == b.y){
                     //nach oben rechts
+                    b.x += 1 * delta;
+                    b.y -= 1 * delta;
                 }
 
                 else if(c.y > b.y){
                     //nach rechts
+                    b.x += 1 * delta;
                 }
 
                 else if(c.y < b.y){
                     //nach oben
+                    b.y -= 1 * delta;
                 }
             }
 
             else if(c.x < b.x) {
                 if(c.y == b.y){
                     //nach unten links
+                    b.x -= 1 * delta;
+                    b.y += 1 * delta;
                 }
 
                 else if(c.y > b.y){
                     //nach unten
+                    b.y += 1 * delta;
                 }
 
                 else if(c.y < b.y){
                     //nach links
+                    b.x -= 1 * delta;
                 }
             }
         }

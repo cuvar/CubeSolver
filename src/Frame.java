@@ -35,7 +35,7 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         addKeyListener(this);
 
         //other objects
-        timer = new Timer(50, this);
+        timer = new Timer(500, this);
         timer.start();
 
         boardPanel = new Board(MARGIN, MARGIN, 16*MARGIN + 1, 26*MARGIN + 1);
@@ -94,7 +94,11 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         //rotates figure
         if(key == KeyEvent.VK_W) {
             if(!figure.landed) {
+                System.out.println(figure.x + ", " + figure.y);
                 figure.rotate();
+                System.out.println(figure.x + ", " + figure.y);
+                System.out.println("-----");
+                repaint();
             }
         }
 
