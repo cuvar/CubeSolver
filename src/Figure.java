@@ -273,8 +273,7 @@ public class Figure {
             int dy = Math.abs(b.y-c.y);
 
            if (dx==dy) {
-                delta = dx;
-                System.out.println(dx);
+                delta = dx+dy;
             } else if (dx > dy) {
                 delta = dx;
             } else {
@@ -337,9 +336,11 @@ public class Figure {
                     b.x -= 1 * delta;
                 }
             }
+
         }
 
-
+        System.out.println(x + ", " + y);
+        System.out.println("-----");
 
     }
 
