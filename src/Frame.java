@@ -7,11 +7,12 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
-public class Frame extends JFrame implements ActionListener, KeyListener {
+public class Frame extends JFrame implements ActionListener, KeyListener, PositionListener {
 
     private static final int WIDTH = 600;
     private static final int HEIGHT = 600;
     public static final int MARGIN = 20;
+    public static final int GROUND = 26*MARGIN + 1;
     public static final Color COLOR_BG = new Color(60,60,64);
 
     private Timer timer;
@@ -38,7 +39,7 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         timer = new Timer(50, this);
         timer.start();
 
-        boardPanel = new Board(MARGIN, MARGIN, 16*MARGIN + 1, 26*MARGIN + 1);
+        boardPanel = new Board(MARGIN, MARGIN, 16*MARGIN + 1, GROUND);
         previewPanel = new Preview(boardPanel.getWidth() + MARGIN, MARGIN, 6*MARGIN + 1, 6*MARGIN + 1);
 
 
@@ -51,7 +52,8 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         add(panel);
 
         //init figure
-        figure = new Figure(6);
+        figure = new Figure(2);
+        figure.setPositionListener(this);
 
         //init list
         figures = new ArrayList<>();
@@ -65,11 +67,11 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
     @Override
     public void actionPerformed(ActionEvent e) {
 
-
         //figure gravity
         if (figure.isFalling(boardPanel.getHeight())){
+            //System.out.println("true");
             if(!figure.softDrop || !figure.hardDrop){
-                figure.gravity(boardPanel.getHeight());
+                figure.gravity();
                 repaint();
             }
         }
@@ -94,10 +96,10 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         //rotates figure
         if(key == KeyEvent.VK_W) {
             if(!figure.landed) {
-                System.out.println(figure.x + ", " + figure.y);
-                figure.rotate();
+                figure.rotate(boardPanel.getHeight());
                 repaint();
             }
+
         }
 
         //figure to left
@@ -114,7 +116,7 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         if(key == KeyEvent.VK_S) {
             if(figure.isFalling(boardPanel.getHeight())) {      //überarbeiten wenn figures
                 if (!figure.softDrop || !figure.hardDrop) {
-                    figure.softDrop(boardPanel.getHeight());
+                    figure.softDrop();
                     repaint();
 
                 }
@@ -127,7 +129,7 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         if(key == KeyEvent.VK_SPACE) {
             if(figure.isFalling(boardPanel.getHeight())) {                 //überarbeiten wenn figures
                 if (!figure.softDrop || !figure.hardDrop) {
-                    figure.hardDrop(boardPanel.getHeight());
+                    figure.hardDrop();
                     repaint();
                 }
             }
@@ -139,4 +141,9 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
 
     @Override
     public void keyReleased(KeyEvent e) {}
+
+    @Override
+    public void onPositionChange(int dif) {
+        figure.syncPosition();
+    }
 }

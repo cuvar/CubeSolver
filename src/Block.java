@@ -33,4 +33,20 @@ public class Block {
         this.x = newX;
         this.y = newY;
     }
+
+    void changeX(int dx){
+        this.x += dx;
+    }
+
+    void changeY(int dy){
+        this.y += dy;
+    }
+
+    int getX(){
+        return this.x;
+    }
+
+    int getY(){
+        return this.y;
+    }
 }
