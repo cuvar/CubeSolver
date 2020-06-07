@@ -28,12 +28,6 @@ public class Block {
 
     }
 
-    //sets block's position
-    void setPos(int newX, int newY) {
-        this.x = newX;
-        this.y = newY;
-    }
-
     void changeX(int dx){
         this.x += dx;
     }
@@ -42,11 +36,4 @@ public class Block {
         this.y += dy;
     }
 
-    int getX(){
-        return this.x;
-    }
-
-    int getY(){
-        return this.y;
-    }
 }

@@ -3,14 +3,10 @@ import java.awt.*;
 
 public class Preview extends JPanel {
 
-    private final int x;
-    private final int y;
     private final int width;
     private final int height;
 
     public Preview(int x, int y, int w, int h){
-        this.x = x;
-        this.y = y;
         this.width = w;
         this.height = h;
 

@@ -8,8 +8,6 @@ public class Figure {
     int height;
     final Color color;
 
-    private PositionListener listener;
-
     int x;
     int y;
     boolean softDrop = false;
@@ -48,11 +46,11 @@ public class Figure {
                 break;
 
             case 2:     //I
-                width = 1 * Frame.MARGIN;
+                width = Frame.MARGIN;
                 height = 4 * Frame.MARGIN;
                 color = Color.blue;
 
-                blocks[0] = new Block(x, y, color.red);
+                blocks[0] = new Block(x, y, Color.red);
                 blocks[1] = new Block(x, y + Frame.MARGIN, color);
                 blocks[2] = new Block(x, y + 2 * Frame.MARGIN, color, true);
                 blocks[3] = new Block(x, y + 3 * Frame.MARGIN, color);
@@ -111,15 +109,11 @@ public class Figure {
     }
 
 
-    public void setPositionListener (PositionListener listener) {
-        this.listener = listener;
-    }
-
-
     void changeX(int dif){
         this.x += dif;
-        if(this.listener != null) {
-            listener.onPositionChange(dif);
+
+        for(Block b : blocks){
+            b.changeX(dif);
         }
     }
 
@@ -127,15 +121,11 @@ public class Figure {
     void changeY(int dif){
         this.y += dif;
 
-        if(this.listener != null) {
-            listener.onPositionChange(dif);
+        for(Block b : blocks){
+            b.changeY(dif);
         }
     }
 
-
-    void syncPosition(){
-        //
-    }
 
     Block getCenteredBlock() {
         int k = 0;
@@ -148,48 +138,24 @@ public class Figure {
     }
 
 
-    int getBlockType() {
-        return this.blockType;
-    }
-
-    void updateBlockX(int dx) {
-        for (Block b : blocks) {
-            b.changeX(dx);
-        }
-    }
-
-    void updateBlockY(int dy) {
-        for (Block b : blocks) {
-            b.changeY(dy);
-        }
-    }
-
     //figure's fall speed
     void gravity() {
         if (y + height + 5 <= Frame.GROUND) {
-            y += 5;
-            updateBlockY(5);
+            changeY(5);
         } else {
             int inc = Frame.GROUND - (y + height);
-            y += inc;
-            updateBlockY(inc);
+            changeY(inc);
         }
 
     }
 
-    //pressing s lets the figure drop faster
+    //pressing S lets the figure drop faster
     void softDrop() {
         softDrop = true;
         hardDrop = false;
 
         int dif = Frame.GROUND - (y + height);
-        if (dif >= 20) {
-            y += 20;
-            updateBlockY(20);
-        } else {
-            y += dif;
-            updateBlockY(dif);
-        }
+        changeY(Math.min(dif, 20));
         softDrop = false;
         hardDrop = true;
     }
@@ -201,8 +167,7 @@ public class Figure {
 
         //change each y coord of blocks
         int dif = Frame.GROUND - (getCenteredBlock().width + getCenteredBlock().y);
-        y += dif;
-        updateBlockY(dif);
+        changeY(dif);
 
         this.landed = true;
         softDrop = true;
@@ -214,11 +179,9 @@ public class Figure {
         if (!landed) { //figure hasn't landed already
             if (x > 0) { //figure is in board
                 if (x >= Frame.MARGIN) {   //dif is large enough
-                    x -= Frame.MARGIN;
-                    updateBlockX(-Frame.MARGIN);
+                    changeX(-Frame.MARGIN);
                 } else {
-                    updateBlockX(-x);
-                    x = 0;
+                    changeX(-x);
                 }
             }
         }
@@ -229,13 +192,8 @@ public class Figure {
         if (!landed) { //figure hasn't landed already
             if (x + width <= rightBorder) { //figure is in board
                 int dif = rightBorder - (x + width);  //dif btw figure and border
-                if (Frame.MARGIN < dif) {   //dif is large enough
-                    x += Frame.MARGIN;
-                    updateBlockX(Frame.MARGIN);
-                } else {    //dif isn't large enough
-                    x += dif;
-                    updateBlockX(dif);
-                }
+                //dif is large enough
+                changeX(Math.min(Frame.MARGIN, dif));
             }
         }
     }
@@ -259,11 +217,7 @@ public class Figure {
 
                 if (dx == dy) {
                     delta = dx + dy;
-                } else if (dx > dy) {
-                    delta = dx;
-                } else {
-                    delta = dy;
-                }
+                } else delta = Math.max(dx, dy);
 
 
                 if (c.x == b.x) {
@@ -271,36 +225,36 @@ public class Figure {
                         //center
                     } else if (c.y > b.y) {
                         //nach oben links
-                        b.x += 1 * delta;
-                        b.y += 1 * delta;
+                        b.x += delta;
+                        b.y += delta;
                     } else if (c.y < b.y) {
                         //nach unten rechts
-                        b.x -= 1 * delta;
-                        b.y -= 1 * delta;
+                        b.x -= delta;
+                        b.y -= delta;
                     }
                 } else if (c.x > b.x) {
                     if (c.y == b.y) {
                         //nach oben rechts
-                        b.x += 1 * delta;
-                        b.y -= 1 * delta;
+                        b.x += delta;
+                        b.y -= delta;
                     } else if (c.y > b.y) {
                         //nach rechts
-                        b.x += 1 * delta;
+                        b.x += delta;
                     } else if (c.y < b.y) {
                         //nach oben
-                        b.y -= 1 * delta;
+                        b.y -= delta;
                     }
                 } else if (c.x < b.x) {
                     if (c.y == b.y) {
                         //nach unten links
-                        b.x -= 1 * delta;
-                        b.y += 1 * delta;
+                        b.x -= delta;
+                        b.y += delta;
                     } else if (c.y > b.y) {
                         //nach unten
-                        b.y += 1 * delta;
+                        b.y += delta;
                     } else if (c.y < b.y) {
                         //nach links
-                        b.x -= 1 * delta;
+                        b.x -= delta;
                     }
                 }
 
@@ -311,19 +265,11 @@ public class Figure {
 
     //check if figure is on ground
     boolean hasLanded(int ground) {
-        if (this.y + this.height == ground) {
-            return true;
-        } else {
-            return false;
-        }
+        return this.y + this.height == ground;
     }
 
     //check if figure is still falling
     boolean isFalling(int ground) {
-        if (this.y + this.height < ground) {
-            return true;
-        } else {
-            return false;
-        }
+        return this.y + this.height < ground;
     }
 }

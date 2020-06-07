@@ -3,14 +3,10 @@ import java.awt.*;
 
 public class Board extends JPanel {
 
-    private final int x;
-    private final int y;
     private final int width;
     private final int height;
 
     public Board(int x, int y, int w, int h){
-        this.x = x;
-        this.y = y;
         this.width = w;
         this.height = h;
 

@@ -7,7 +7,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.ArrayList;
 
-public class Frame extends JFrame implements ActionListener, KeyListener, PositionListener {
+public class Frame extends JFrame implements ActionListener, KeyListener {
 
     private static final int WIDTH = 600;
     private static final int HEIGHT = 600;
@@ -16,9 +16,8 @@ public class Frame extends JFrame implements ActionListener, KeyListener, Positi
     public static final Color COLOR_BG = new Color(60,60,64);
 
     private Timer timer;
-    private JPanel panel;
-    private Board boardPanel;
-    private Preview previewPanel;
+    private final Board boardPanel;
+    private final Preview previewPanel;
 
     public static Figure figure;
     public static ArrayList<Figure> figures;
@@ -44,7 +43,7 @@ public class Frame extends JFrame implements ActionListener, KeyListener, Positi
 
 
         //Panel
-        panel = new JPanel();
+        JPanel panel = new JPanel();
         panel.setLayout(null);
         panel.setBackground(COLOR_BG);
         panel.add(boardPanel);
@@ -52,8 +51,7 @@ public class Frame extends JFrame implements ActionListener, KeyListener, Positi
         add(panel);
 
         //init figure
-        figure = new Figure(2);
-        figure.setPositionListener(this);
+        figure = new Figure(0);
 
         //init list
         figures = new ArrayList<>();
@@ -142,8 +140,4 @@ public class Frame extends JFrame implements ActionListener, KeyListener, Positi
     @Override
     public void keyReleased(KeyEvent e) {}
 
-    @Override
-    public void onPositionChange(int dif) {
-        figure.syncPosition();
-    }
 }
