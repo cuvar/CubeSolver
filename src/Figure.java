@@ -109,19 +109,19 @@ public class Figure {
     }
 
 
-    void changeX(int dif){
+    void changeX(int dif) {
         this.x += dif;
 
-        for(Block b : blocks){
+        for (Block b : blocks) {
             b.changeX(dif);
         }
     }
 
 
-    void changeY(int dif){
+    void changeY(int dif) {
         this.y += dif;
 
-        for(Block b : blocks){
+        for (Block b : blocks) {
             b.changeY(dif);
         }
     }
@@ -197,6 +197,45 @@ public class Figure {
             }
         }
     }
+
+    void rotateNew() {
+        //https://stackoverflow.com/questions/233850/tetris-piece-rotation-algorithm#:~:text=But%20there%20are%20rotation%20algorithms,and%20the%20piece%20is%20rotated.
+        Point[] rotatedCoordinates = new Point[MAX_COORDINATES];
+
+        for (int i = 0; i < MAX_COORDINATES; i++) {
+
+            // Translates current coordinate to be relative to (0,0)
+            Point translationCoordinate = new Point(coordinates[i].x - origin.x, coordinates[i].y - origin.y);
+
+            // Java coordinates start at 0 and increase as a point moves down, so
+            // multiply by -1 to reverse
+            translationCoordinate.y *= -1;
+
+            // Clone coordinates, so I can use translation coordinates
+            // in upcoming calculation
+            rotatedCoordinates[i] = (Point) translationCoordinate.clone();
+
+            // May need to round results after rotation
+            rotatedCoordinates[i].x = (int) Math.round(translationCoordinate.x * Math.cos(Math.PI / 2) - translationCoordinate.y * Math.sin(Math.PI / 2));
+            rotatedCoordinates[i].y = (int) Math.round(translationCoordinate.x * Math.sin(Math.PI / 2) + translationCoordinate.y * Math.cos(Math.PI / 2));
+
+            // Multiply y-coordinate by -1 again
+            rotatedCoordinates[i].y *= -1;
+
+            // Translate to get new coordinates relative to
+            // original origin
+            rotatedCoordinates[i].x += origin.x;
+            rotatedCoordinates[i].y += origin.y;
+
+            // Erase the old coordinates by making them black
+            matrix.fillCell(coordinates[i].x, coordinates[i].y, Color.black);
+
+        }
+        // Set new coordinates to be drawn on screen
+        setCoordinates(rotatedCoordinates.clone());
+    }
+
+
 
     //rotates blocks 90° to the right
     void rotate(int ground) {
