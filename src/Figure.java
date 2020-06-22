@@ -14,6 +14,7 @@ public class Figure {
     boolean hardDrop = false;
     boolean landed = false;
     public Block[] blocks = new Block[BLOCK_NUM];
+    public Point origin;
 
 
     public Figure(int blockType) {
@@ -31,7 +32,8 @@ public class Figure {
                 blocks[0] = new Block(x, y, color);
                 blocks[1] = new Block(x + Frame.MARGIN, y, color);
                 blocks[2] = new Block(x, y + Frame.MARGIN, color);
-                blocks[3] = new Block(x + Frame.MARGIN, y + Frame.MARGIN, color, true);
+                blocks[3] = new Block(x + Frame.MARGIN, y + Frame.MARGIN, color);
+                origin = new Point(x + Frame.MARGIN, y + Frame.MARGIN);
                 break;
 
             case 1:     //T
@@ -42,7 +44,8 @@ public class Figure {
                 blocks[0] = new Block(x, y, color);
                 blocks[1] = new Block(x + Frame.MARGIN, y, color);
                 blocks[2] = new Block(x + 2 * Frame.MARGIN, y, color);
-                blocks[3] = new Block(x + Frame.MARGIN, y + Frame.MARGIN, color, true);
+                blocks[3] = new Block(x + Frame.MARGIN, y + Frame.MARGIN, color);
+                origin = new Point((int) (x + (1.5 * Frame.MARGIN)), (int) (y + (0.5 * Frame.MARGIN)));
                 break;
 
             case 2:     //I
@@ -52,8 +55,9 @@ public class Figure {
 
                 blocks[0] = new Block(x, y, Color.red);
                 blocks[1] = new Block(x, y + Frame.MARGIN, color);
-                blocks[2] = new Block(x, y + 2 * Frame.MARGIN, color, true);
+                blocks[2] = new Block(x, y + 2 * Frame.MARGIN, color);
                 blocks[3] = new Block(x, y + 3 * Frame.MARGIN, color);
+                origin = new Point(x + 2* Frame.MARGIN, y + Frame.MARGIN);
                 break;
 
             case 3:     //J
@@ -64,7 +68,8 @@ public class Figure {
                 blocks[0] = new Block(x + Frame.MARGIN, y, color);
                 blocks[1] = new Block(x + Frame.MARGIN, y + Frame.MARGIN, color);
                 blocks[2] = new Block(x + Frame.MARGIN, y + 2 * Frame.MARGIN, color);
-                blocks[3] = new Block(x, y + 2 * Frame.MARGIN, color, true);
+                blocks[3] = new Block(x, y + 2 * Frame.MARGIN, color);
+                origin = new Point((int) (x + (1.5 * Frame.MARGIN)), (int) (y + (1.5 * Frame.MARGIN)));
                 break;
 
             case 4:     //L
@@ -75,7 +80,8 @@ public class Figure {
                 blocks[0] = new Block(x, y, color);
                 blocks[1] = new Block(x, y + Frame.MARGIN, color);
                 blocks[2] = new Block(x, y + 2 * Frame.MARGIN, color);
-                blocks[3] = new Block(x + Frame.MARGIN, y + 2 * Frame.MARGIN, color, true);
+                blocks[3] = new Block(x + Frame.MARGIN, y + 2 * Frame.MARGIN, color);
+                origin = new Point((int) (x + (0.5 * Frame.MARGIN)), (int) (y + (1.5 * Frame.MARGIN)));
                 break;
 
             case 5:     //S
@@ -86,7 +92,8 @@ public class Figure {
                 blocks[0] = new Block(x + Frame.MARGIN, y, color);
                 blocks[1] = new Block(x + 2 * Frame.MARGIN, y, color);
                 blocks[2] = new Block(x, y + Frame.MARGIN, color);
-                blocks[3] = new Block(x + Frame.MARGIN, y + Frame.MARGIN, color, true);
+                blocks[3] = new Block(x + Frame.MARGIN, y + Frame.MARGIN, color);
+                origin = new Point((int) (x + (1.5 * Frame.MARGIN)), (int) (y + (1.5 * Frame.MARGIN)));
                 break;
 
             case 6:     //Z
@@ -96,14 +103,16 @@ public class Figure {
 
                 blocks[0] = new Block(x, y, color);
                 blocks[1] = new Block(x + Frame.MARGIN, y, color);
-                blocks[2] = new Block(x + Frame.MARGIN, y + Frame.MARGIN, color, true);
+                blocks[2] = new Block(x + Frame.MARGIN, y + Frame.MARGIN, color);
                 blocks[3] = new Block(x + 2 * Frame.MARGIN, y + Frame.MARGIN, color);
+                origin = new Point((int) (x + (0.5 * Frame.MARGIN)), (int) (y + (1.5 * Frame.MARGIN)));
                 break;
 
             default:
                 width = 0;
                 height = 0;
                 color = Color.pink;
+                origin = new Point(0,0);
                 break;
         }
     }
@@ -127,7 +136,7 @@ public class Figure {
     }
 
 
-    Block getCenteredBlock() {
+/*    Block getCenteredBlock() {
         int k = 0;
         for (int i = 0; i < BLOCK_NUM; i++) {
             if (blocks[i].center) {
@@ -135,7 +144,7 @@ public class Figure {
             }
         }
         return blocks[k];
-    }
+    }*/
 
 
     //figure's fall speed
@@ -166,7 +175,7 @@ public class Figure {
         hardDrop = true;
 
         //change each y coord of blocks
-        int dif = Frame.GROUND - (getCenteredBlock().width + getCenteredBlock().y);
+        int dif = Frame.GROUND - (y + height);
         changeY(dif);
 
         this.landed = true;
@@ -198,45 +207,42 @@ public class Figure {
         }
     }
 
-    void rotateNew() {
+    void rotate(int ground) {
         //https://stackoverflow.com/questions/233850/tetris-piece-rotation-algorithm#:~:text=But%20there%20are%20rotation%20algorithms,and%20the%20piece%20is%20rotated.
-        Point[] rotatedCoordinates = new Point[MAX_COORDINATES];
+        if (ground - (y + height) > width) {
 
-        for (int i = 0; i < MAX_COORDINATES; i++) {
+            int h = width;
+            width = height;
+            height = h;
 
-            // Translates current coordinate to be relative to (0,0)
-            Point translationCoordinate = new Point(coordinates[i].x - origin.x, coordinates[i].y - origin.y);
+            for (int i = 0; i < BLOCK_NUM; i++) {
 
-            // Java coordinates start at 0 and increase as a point moves down, so
-            // multiply by -1 to reverse
-            translationCoordinate.y *= -1;
+                // Translates current coordinate to be relative to (0,0)
+                Point rotatedCoordinates = new Point(blocks[i].x - origin.x, blocks[i].y - origin.y);
 
-            // Clone coordinates, so I can use translation coordinates
-            // in upcoming calculation
-            rotatedCoordinates[i] = (Point) translationCoordinate.clone();
+                // May need to round results after rotation
+                if (rotatedCoordinates.y < origin.y) {
+                    rotatedCoordinates.x = rotatedCoordinates.y + Frame.MARGIN;
+                } else {
+                    rotatedCoordinates.x = rotatedCoordinates.y - Frame.MARGIN;
+                }
+                rotatedCoordinates.y = rotatedCoordinates.x;
 
-            // May need to round results after rotation
-            rotatedCoordinates[i].x = (int) Math.round(translationCoordinate.x * Math.cos(Math.PI / 2) - translationCoordinate.y * Math.sin(Math.PI / 2));
-            rotatedCoordinates[i].y = (int) Math.round(translationCoordinate.x * Math.sin(Math.PI / 2) + translationCoordinate.y * Math.cos(Math.PI / 2));
 
-            // Multiply y-coordinate by -1 again
-            rotatedCoordinates[i].y *= -1;
+                // Translate to get new coordinates relative to
+                // original origin
+                rotatedCoordinates.x += origin.x;
+                rotatedCoordinates.y += origin.y;
 
-            // Translate to get new coordinates relative to
-            // original origin
-            rotatedCoordinates[i].x += origin.x;
-            rotatedCoordinates[i].y += origin.y;
-
-            // Erase the old coordinates by making them black
-            matrix.fillCell(coordinates[i].x, coordinates[i].y, Color.black);
-
+                blocks[i].x = rotatedCoordinates.x;
+                blocks[i].y = rotatedCoordinates.y;
+            }
         }
-        // Set new coordinates to be drawn on screen
-        setCoordinates(rotatedCoordinates.clone());
+
     }
 
 
-
+/*
     //rotates blocks 90° to the right
     void rotate(int ground) {
         if (ground - (y + height) > width) {
@@ -301,7 +307,7 @@ public class Figure {
         }
 
     }
-
+*/
     //check if figure is on ground
     boolean hasLanded(int ground) {
         return this.y + this.height == ground;
