@@ -218,25 +218,31 @@ public class Figure {
             for (int i = 0; i < BLOCK_NUM; i++) {
 
                 // Translates current coordinate to be relative to (0,0)
-                Point rotatedCoordinates = new Point(blocks[i].x - origin.x, blocks[i].y - origin.y);
+                Point translatedCoordinates = new Point((blocks[i].cx - origin.x)/blocks[i].width, (blocks[i].cy - origin.y)/blocks[i].width);
 
-                // May need to round results after rotation
-                if (rotatedCoordinates.y < origin.y) {
-                    rotatedCoordinates.x = rotatedCoordinates.y + Frame.MARGIN;
-                } else {
-                    rotatedCoordinates.x = rotatedCoordinates.y - Frame.MARGIN;
-                }
-                rotatedCoordinates.y = rotatedCoordinates.x;
+                //DEBUG
+                System.out.println(translatedCoordinates.x + ", " + translatedCoordinates.y);
 
+                // actual rotation
+                int rotatedx = (int)Math.round(translatedCoordinates.x * Math.cos(Math.PI/2) - translatedCoordinates.y * Math.sin(Math.PI/2));
+                int rotatedy = (int)Math.round(translatedCoordinates.x * Math.sin(Math.PI/2) - translatedCoordinates.y * Math.cos(Math.PI/2));
+
+                System.out.println(rotatedx + ", " + rotatedy);
+                System.out.println("-----");
 
                 // Translate to get new coordinates relative to
                 // original origin
-                rotatedCoordinates.x += origin.x;
-                rotatedCoordinates.y += origin.y;
+                rotatedx *= blocks[i].width;
+                rotatedy *= blocks[i].width;
 
-                blocks[i].x = rotatedCoordinates.x;
-                blocks[i].y = rotatedCoordinates.y;
+                rotatedx += origin.x;
+                rotatedy += origin.y;
+
+                blocks[i].x = rotatedx - blocks[i].width;
+                blocks[i].y = rotatedy - blocks[i].width;
             }
+
+            System.out.println("....................");
         }
 
     }
