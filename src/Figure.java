@@ -53,11 +53,11 @@ public class Figure {
                 height = 4 * Frame.MARGIN;
                 color = Color.blue;
 
-                blocks[0] = new Block(x, y, Color.red);
+                blocks[0] = new Block(x, y, color);
                 blocks[1] = new Block(x, y + Frame.MARGIN, color);
                 blocks[2] = new Block(x, y + 2 * Frame.MARGIN, color);
                 blocks[3] = new Block(x, y + 3 * Frame.MARGIN, color);
-                origin = new Point(x + 2* Frame.MARGIN, y + Frame.MARGIN);
+                origin = new Point(x, y + (2 * Frame.MARGIN));
                 break;
 
             case 3:     //J
@@ -105,14 +105,14 @@ public class Figure {
                 blocks[1] = new Block(x + Frame.MARGIN, y, color);
                 blocks[2] = new Block(x + Frame.MARGIN, y + Frame.MARGIN, color);
                 blocks[3] = new Block(x + 2 * Frame.MARGIN, y + Frame.MARGIN, color);
-                origin = new Point((int) (x + (0.5 * Frame.MARGIN)), (int) (y + (1.5 * Frame.MARGIN)));
+                origin = new Point((int) (x + (1.5 * Frame.MARGIN)), (int) (y + (1.5 * Frame.MARGIN)));
                 break;
 
             default:
                 width = 0;
                 height = 0;
                 color = Color.pink;
-                origin = new Point(0,0);
+                origin = new Point(x,y);
                 break;
         }
     }
@@ -120,6 +120,7 @@ public class Figure {
 
     void changeX(int dif) {
         this.x += dif;
+        origin.x += dif;
 
         for (Block b : blocks) {
             b.changeX(dif);
@@ -129,22 +130,12 @@ public class Figure {
 
     void changeY(int dif) {
         this.y += dif;
+        origin.y += dif;
 
         for (Block b : blocks) {
             b.changeY(dif);
         }
     }
-
-
-/*    Block getCenteredBlock() {
-        int k = 0;
-        for (int i = 0; i < BLOCK_NUM; i++) {
-            if (blocks[i].center) {
-                k = i;
-            }
-        }
-        return blocks[k];
-    }*/
 
 
     //figure's fall speed
@@ -207,9 +198,9 @@ public class Figure {
         }
     }
 
-    void rotate(int ground) {
+    void rotate() {
         //https://stackoverflow.com/questions/233850/tetris-piece-rotation-algorithm#:~:text=But%20there%20are%20rotation%20algorithms,and%20the%20piece%20is%20rotated.
-        if (ground - (y + height) > width) {
+        if (Frame.GROUND - (y + height) > width) {
 
             int h = width;
             width = height;
@@ -218,109 +209,46 @@ public class Figure {
             for (int i = 0; i < BLOCK_NUM; i++) {
 
                 // Translates current coordinate to be relative to (0,0)
-                Point translatedCoordinates = new Point((blocks[i].cx - origin.x)/blocks[i].width, (blocks[i].cy - origin.y)/blocks[i].width);
+                Point translatedCoordinates = new Point(((blocks[i].x - blocks[i].width/2) - origin.x)/blocks[i].width, ((blocks[i].y - blocks[i].width/2) - origin.y)/blocks[i].width);
 
-                //DEBUG
-                System.out.println(translatedCoordinates.x + ", " + translatedCoordinates.y);
+                System.out.println(translatedCoordinates.x + ", " + translatedCoordinates.y);                //DEBUG
 
                 // actual rotation
-                int rotatedx = (int)Math.round(translatedCoordinates.x * Math.cos(Math.PI/2) - translatedCoordinates.y * Math.sin(Math.PI/2));
-                int rotatedy = (int)Math.round(translatedCoordinates.x * Math.sin(Math.PI/2) - translatedCoordinates.y * Math.cos(Math.PI/2));
+                int rotatedX = (int)Math.round(- translatedCoordinates.y * Math.sin(Math.PI/2));
+                int rotatedY = (int)Math.round(translatedCoordinates.x * Math.sin(Math.PI/2));
 
-                System.out.println(rotatedx + ", " + rotatedy);
+                System.out.println(rotatedY + ", " + rotatedX);         //DEBUG
                 System.out.println("-----");
 
                 // Translate to get new coordinates relative to
                 // original origin
-                rotatedx *= blocks[i].width;
-                rotatedy *= blocks[i].width;
+                rotatedX *= blocks[i].width;
+                rotatedY *= blocks[i].width;
 
-                rotatedx += origin.x;
-                rotatedy += origin.y;
+                rotatedX += origin.x - blocks[i].width/2;
+                rotatedY += origin.y - blocks[i].width/2;
 
-                blocks[i].x = rotatedx - blocks[i].width;
-                blocks[i].y = rotatedy - blocks[i].width;
+                blocks[i].x = rotatedX;
+                blocks[i].y = rotatedY;
+
+
+                //System.out.println(blocks[i].cx + ", " + blocks[i].cy);
             }
 
             System.out.println("....................");
+
+
         }
 
     }
 
-
-/*
-    //rotates blocks 90° to the right
-    void rotate(int ground) {
-        if (ground - (y + height) > width) {
-
-            //switch figure's w and h
-            int h = height;
-            height = width;
-            width = h;
-
-            Block c = getCenteredBlock();
-
-            for (Block b : blocks) {
-
-                int delta = 0;
-                int dx = Math.abs(b.x - c.x);
-                int dy = Math.abs(b.y - c.y);
-
-                if (dx == dy) {
-                    delta = dx + dy;
-                } else delta = Math.max(dx, dy);
-
-
-                if (c.x == b.x) {
-                    if (c.y == b.y) {
-                        //center
-                    } else if (c.y > b.y) {
-                        //nach oben links
-                        b.x += delta;
-                        b.y += delta;
-                    } else if (c.y < b.y) {
-                        //nach unten rechts
-                        b.x -= delta;
-                        b.y -= delta;
-                    }
-                } else if (c.x > b.x) {
-                    if (c.y == b.y) {
-                        //nach oben rechts
-                        b.x += delta;
-                        b.y -= delta;
-                    } else if (c.y > b.y) {
-                        //nach rechts
-                        b.x += delta;
-                    } else if (c.y < b.y) {
-                        //nach oben
-                        b.y -= delta;
-                    }
-                } else if (c.x < b.x) {
-                    if (c.y == b.y) {
-                        //nach unten links
-                        b.x -= delta;
-                        b.y += delta;
-                    } else if (c.y > b.y) {
-                        //nach unten
-                        b.y += delta;
-                    } else if (c.y < b.y) {
-                        //nach links
-                        b.x -= delta;
-                    }
-                }
-
-            }
-        }
-
-    }
-*/
     //check if figure is on ground
-    boolean hasLanded(int ground) {
-        return this.y + this.height == ground;
+    boolean hasLanded() {
+        return this.y + this.height == Frame.GROUND;
     }
 
     //check if figure is still falling
-    boolean isFalling(int ground) {
-        return this.y + this.height < ground;
+    boolean isFalling() {
+        return this.y + this.height < Frame.GROUND;
     }
 }

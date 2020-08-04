@@ -15,6 +15,10 @@ public class Preview extends JPanel {
         this.setBackground(Frame.COLOR_BG);
     }
 
+    //cleans screen
+    public void clean(){
+
+    }
 
     @Override
     protected void paintComponent(Graphics g) {

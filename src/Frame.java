@@ -1,4 +1,3 @@
-import javax.imageio.ImageReader;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -34,13 +33,8 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         setLocationRelativeTo(null);
         addKeyListener(this);
 
-        //other objects
-        timer = new Timer(50, this);
-        timer.start();
-
         boardPanel = new Board(MARGIN, MARGIN, 16*MARGIN + 1, GROUND);
         previewPanel = new Preview(boardPanel.getWidth() + MARGIN, MARGIN, 6*MARGIN + 1, 6*MARGIN + 1);
-
 
         //Panel
         JPanel panel = new JPanel();
@@ -50,12 +44,14 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
         panel.add(previewPanel);
         add(panel);
 
-        //init figure
-        figure = new Figure(1);
-
         //init list
         figures = new ArrayList<>();
-        figures.add(figure);
+        int r = (int) (Math.random() * 7);
+        figures.add(new Figure(2));
+
+        //other objects
+        timer = new Timer(50, this);
+        timer.start();
     }
 
 
@@ -66,16 +62,16 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
     public void actionPerformed(ActionEvent e) {
 
         //figure gravity
-        if (figure.isFalling(boardPanel.getHeight())){
+        if (figures.get(0).isFalling()){
             //System.out.println("true");
-            if(!figure.softDrop || !figure.hardDrop){
-                figure.gravity();
+            if(!figures.get(0).softDrop || !figures.get(0).hardDrop){
+                figures.get(0).gravity();
                 repaint();
             }
         }
 
-        if(figure.hasLanded(boardPanel.getHeight())) { //überarbeiten wenn figures
-            figure.landed = true;
+        if(figures.get(0).hasLanded()) { //überarbeiten wenn figures
+            figures.get(0).landed = true;
         }
     }
 
@@ -91,10 +87,15 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
             System.exit(0);
         }
 
+        //harddrop
+        if(key == KeyEvent.VK_R) {
+            restartGame();
+        }
+
         //rotates figure
         if(key == KeyEvent.VK_W) {
-            if(!figure.landed) {
-                figure.rotate(boardPanel.getHeight());
+            if(!figures.get(0).landed) {
+                figures.get(0).rotate();
                 repaint();
             }
 
@@ -102,36 +103,37 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
 
         //figure to left
         if(key == KeyEvent.VK_A) {
-            figure.moveLeft();
+            figures.get(0).moveLeft();
         }
 
         //figure to right
         if(key == KeyEvent.VK_D) {
-            figure.moveRight(boardPanel.getWidth());
+            figures.get(0).moveRight(boardPanel.getWidth());
         }
 
         //softdrop
         if(key == KeyEvent.VK_S) {
-            if(figure.isFalling(boardPanel.getHeight())) {      //überarbeiten wenn figures
-                if (!figure.softDrop || !figure.hardDrop) {
-                    figure.softDrop();
+            if(figures.get(0).isFalling()) {      //überarbeiten wenn figures
+                if (!figures.get(0).softDrop || !figures.get(0).hardDrop) {
+                    figures.get(0).softDrop();
                     repaint();
 
                 }
             } else {
-                figure.landed = true;
+                figures.get(0).landed = true;
             }
         }
 
         //harddrop
         if(key == KeyEvent.VK_SPACE) {
-            if(figure.isFalling(boardPanel.getHeight())) {                 //überarbeiten wenn figures
-                if (!figure.softDrop || !figure.hardDrop) {
-                    figure.hardDrop();
+            if(figures.get(0).isFalling()) {                 //überarbeiten wenn figures
+                if (!figures.get(0).softDrop || !figures.get(0).hardDrop) {
+                    figures.get(0).hardDrop();
                     repaint();
                 }
             }
         }
+
     }
 
     @Override
@@ -140,4 +142,15 @@ public class Frame extends JFrame implements ActionListener, KeyListener {
     @Override
     public void keyReleased(KeyEvent e) {}
 
+
+    //Restarts the game
+    public void restartGame(){
+        figures.clear();
+        boardPanel.clean();
+
+        int r = (int) Math.random() * 6;
+        figures.add(new Figure(r));
+
+        timer.restart();
+    }
 }
